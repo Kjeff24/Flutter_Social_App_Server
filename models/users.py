@@ -5,7 +5,7 @@ from config.db import db
 import bcrypt
 
 class User:
-    def __init__(self, name, profile_pic, phone, password):
+    def __init__(self, name, profile_pic, phone=None, password=None):
         self._id = None
         self.registeredAt = datetime.now()
         self.name = name

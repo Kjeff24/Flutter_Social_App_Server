@@ -35,13 +35,21 @@ def get_user_by_id(user_id):
 def login():
     # username = request.form.get('username').lower()
     # password = request.form.get('password')
- 
-    username = request.json['name'].lower()
-    password = request.json['password']
+    
+    data = request.json
+
+    if not data:
+        return jsonify({'error': 'JSON data is required'}), 400
+
+    username = data.get('username', '').lower()
+    password = data.get('password', '')
+
+    if not username or not password:
+        return jsonify({'error': 'Username and password are required'}), 400
     
     # Your authentication and validation logic goes here
     user = User.find_by_username_and_password(username,password)
 
     if not user:
         return jsonify({'error': 'User not found'}), 404
-    return jsonify({'user': {'name': user.name, 'profile_pic': user.profile_pic, 'phone': user.phone}})
+    return jsonify({'user': {'name': user.name, 'profile_pic': user.profile_pic, 'phone': user.phone}, 'statusCode':201}), 201
