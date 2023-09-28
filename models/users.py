@@ -18,10 +18,10 @@ class User:
         self.location = location
         self.password=password
         self.profile_pic = profile_pic
+        self.token = None
 
     def save(self):
         hashed_password = bcrypt.hashpw(self.password.encode('utf-8'), bcrypt.gensalt())
-
         result = db.users.insert_one({
             'username': self.username,
             'firstname': self.firstname,

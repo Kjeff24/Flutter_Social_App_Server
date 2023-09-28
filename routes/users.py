@@ -1,6 +1,12 @@
 from flask import Flask, jsonify, request, Blueprint
 from bson import ObjectId
 from models.users import User
+import jwt 
+import os
+
+# Define a secret key for JWT (replace with your own secret key)
+SECRET_KEY = os.environ.get('SECRET_KEY')
+
 
 users = Blueprint('users', __name__)
 
@@ -20,6 +26,8 @@ def add_user():
     # Create a new user in the database
     user = User(username=username, firstname=firstname, lastname=lastname, password=password)
     user.save()
+    
+    # Generate a JWT token
     
     # Return a JSON response indicating success
     return jsonify({'message': 'success', 'code': 201}), 201
@@ -57,7 +65,9 @@ def login():
 
     if not user:
         return jsonify({'error': 'User not found'}), 404
-    return jsonify({'data': {'id': str(user._id), 'username': user.username, 'firstname': user.firstname, 'lastname': user.lastname}}), 200
+    
+    token = jwt.encode({'username': username}, SECRET_KEY, algorithm='HS256')
+    return jsonify({'data': {'id': str(user._id), 'username': user.username, 'firstname': user.firstname, 'lastname': user.lastname, 'token': token}}), 200
 
 @users.route('/update/<string:user_id>', methods=['PUT'])
 def update_user(user_id):

@@ -21,6 +21,7 @@ pip install -r requirements.txt
 ```
 DATABASE_URI = 'mongodb+srv://<username>>:<password>@cluster0.qf1qitd.mongodb.net/'
 ```
+- Setup SECRET_KEY. You can use a `.env` file to store it or change it from `routes/users.py`.
 
 ### API Base URL
 
