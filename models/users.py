@@ -18,7 +18,6 @@ class User:
         self.location = location
         self.password=password
         self.profile_pic = profile_pic
-        self.token = None
 
     def save(self):
         hashed_password = bcrypt.hashpw(self.password.encode('utf-8'), bcrypt.gensalt())
@@ -27,6 +26,11 @@ class User:
             'firstname': self.firstname,
             'lastname': self.lastname,
             'password':hashed_password,
+            'mobile':self.mobile,
+            'birthday':self.birthday,
+            'visibleGender':self.visibleGender,
+            'location':self.location,
+            'profile_pic':self.profile_pic,
             'registeredAt': self.registeredAt
         })
         self._id = result.inserted_id
@@ -45,8 +49,6 @@ class User:
             'location': self.location,
             'profile_pic': self.profile_pic,
         }
-        
-        print(update_fields)
 
         # Only update the password if it's not None
         if hashed_password is not None:
@@ -72,12 +74,19 @@ class User:
             user_dict['username'],
             user_dict['firstname'],
             user_dict['lastname'],
-            user_dict['password']
         )
         user._id = user_dict['_id']
         if 'registeredAt' in user_dict:
             user.registeredAt = user_dict['registeredAt']
         return user
+    
+    def to_dict(self):
+        return {
+            'id': str(self._id), 
+            'username': self.username,
+            'firstname': self.firstname,
+            'lastname': self.lastname,
+        }
 
     @staticmethod
     def find_by_id(user_id):

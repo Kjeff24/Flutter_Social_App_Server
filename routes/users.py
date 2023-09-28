@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request, Blueprint
+from flask import jsonify, request, Blueprint
 from bson import ObjectId
 from models.users import User
 import jwt 
@@ -44,7 +44,7 @@ def get_user_by_id(user_id):
     user = User.find_by_id(ObjectId(user_id))
     if not user:
         return jsonify({'error': 'User not found'}), 404
-    return jsonify({'user': {'username': user.username, 'firstname': user.firstname, 'lastname': user.lastname}})
+    return jsonify({'user': {'id': str(user._id),'username': user.username, 'firstname': user.firstname, 'lastname': user.lastname}})
 
 @users.route('/login', methods=['POST'])
 def login():
@@ -77,7 +77,8 @@ def update_user(user_id):
         return jsonify({'error': 'User not found'}), 404
     
     # Check if a user with the same username already exists
-    existing_user = User.find_by_username(user.username)
+    if request.json['username'].lower():
+        existing_user = User.find_by_username(request.json['username'].lower())
     if existing_user is not None:
         return jsonify({'message': 'A user with this username already exists', 'code': 400}), 400
 

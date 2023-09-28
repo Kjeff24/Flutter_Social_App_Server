@@ -1,10 +1,12 @@
 from flask import Flask
 from routes.users import users
+from routes.posts import posts
 
 app = Flask(__name__)
-# app.debug = True 
+app.debug = True 
 # Register the users blueprint
 app.register_blueprint(users, url_prefix='/users')
+app.register_blueprint(posts, url_prefix='/posts')
 #display message on the browser when the server is running
 @app.route('/')
 def route():
